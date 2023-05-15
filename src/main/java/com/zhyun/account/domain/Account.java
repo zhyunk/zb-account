@@ -1,6 +1,8 @@
 package com.zhyun.account.domain;
 
+import com.zhyun.account.exception.AccountException;
 import com.zhyun.account.type.AccountStatus;
+import com.zhyun.account.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+
+import static com.zhyun.account.type.ErrorCode.AMOUNT_EXCEED_BALANCE;
 
 @Getter
 @Setter
@@ -34,4 +38,11 @@ public class Account {
 
     @CreatedDate      private LocalDateTime createdAt;
     @LastModifiedDate private LocalDateTime updatedAt;
+
+    public void useBalance(Long amount) {
+        if (amount > balance)
+            throw new AccountException(AMOUNT_EXCEED_BALANCE);
+
+        balance -= amount;
+    }
 }
