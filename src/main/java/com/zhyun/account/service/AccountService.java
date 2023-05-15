@@ -100,6 +100,7 @@ public class AccountService {
         }
     }
 
+    @Transactional // lazy-loading 을 위해 필요
     public List<AccountDto> getAccountsByUserId(Long userId) {
         AccountUser accountUser = accountUserRepository.findById(userId)
                 .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
