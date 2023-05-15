@@ -42,7 +42,7 @@ public class AccountController {
         );
     }
 
-    @GetMapping
+    @GetMapping("/account")
     public List<AccountInfo> getAccountsByUserId(
             @RequestParam("user_id") Long userId
     ) {
@@ -54,11 +54,5 @@ public class AccountController {
                         .balance(accountDto.getBalance())
                         .build())
                 .collect(Collectors.toList());
-
-    }
-
-    @GetMapping("/get-account/{id}")
-    public Account getAccount(@PathVariable Long id) {
-        return accountService.getAccount(id);
     }
 }
