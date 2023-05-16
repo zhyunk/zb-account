@@ -1,11 +1,13 @@
 package com.zhyun.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhyun.account.dto.AccountDto;
 import com.zhyun.account.dto.CancelBalance;
 import com.zhyun.account.dto.TransactionDto;
 import com.zhyun.account.dto.UseBalance;
 import com.zhyun.account.service.TransactionService;
 import com.zhyun.account.type.TransactionResultType;
+import com.zhyun.account.type.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,12 +16,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.zhyun.account.type.TransactionResultType.S;
+import static com.zhyun.account.type.TransactionType.USE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -91,4 +97,42 @@ class TransactionControllerTest {
                 .andExpect(jsonPath("$.amount").value("54321"));
     }
 
+    @Test
+    void successGetQueryTransaction() throws Exception {
+        // given
+        List<AccountDto> accountDtos = Arrays.asList(
+                AccountDto.builder()
+                        .accountNumber("1234567890")
+                        .balance(1000L)
+                        .build(),
+                AccountDto.builder()
+                        .accountNumber("1231231230")
+                        .balance(2000L)
+                        .build(),
+                AccountDto.builder()
+                        .accountNumber("4564564560")
+                        .balance(3000L)
+                        .build()
+        );
+        given(transactionService.queryTransaction(anyString()))
+                .willReturn(TransactionDto.builder()
+                        .accountNumber("1000000000")
+                        .transactionType(USE)
+                        .transactedAt(LocalDateTime.now())
+                        .amount(54321L)
+                        .transactionId("transactionIdForCancel")
+                        .transactionResultType(S)
+                        .build());
+
+        // when
+        // then
+        mockMvc.perform(get("/transaction/12345"))
+                .andDo(print())
+                .andExpect(jsonPath("$.accountNumber").value("1000000000"))
+                .andExpect(jsonPath("$.transactionType").value("USE"))
+                .andExpect(jsonPath("$.transactionResult").value("S"))
+                .andExpect(jsonPath("$.transactionId").value("transactionIdForCancel"))
+                .andExpect(jsonPath("$.amount").value("54321"));
+
+    }
 }
