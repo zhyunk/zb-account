@@ -6,9 +6,11 @@ import com.zhyun.account.domain.Account;
 import com.zhyun.account.dto.AccountDto;
 import com.zhyun.account.dto.CreateAccount;
 import com.zhyun.account.dto.DeleteAccount;
+import com.zhyun.account.exception.AccountException;
 import com.zhyun.account.type.AccountStatus;
 import com.zhyun.account.service.AccountService;
 import com.zhyun.account.service.RedissonTestService;
+import com.zhyun.account.type.ErrorCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -145,4 +147,21 @@ class AccountControllerTest {
                 .andExpect(jsonPath("$[2].balance").value("3000"));
 
     }
+
+    @Test
+    void failGetAccount() throws Exception {
+        //given
+        given(accountService.getAccount(anyLong()))
+                .willThrow( new AccountException(ErrorCode.ACCOUNT_NOT_FOUND) );
+
+        // when
+        // then
+        mockMvc.perform(get("/account/879"))
+                .andDo(print())
+                .andExpect(jsonPath("$.errorCode").value("ACCOUNT_NOT_FOUND"))
+                .andExpect(jsonPath("$.errorMessage").value("계좌가 없습니다."))
+                .andExpect(status().isOk());
+    }
+
+
 }
