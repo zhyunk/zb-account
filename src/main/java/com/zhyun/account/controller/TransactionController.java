@@ -1,6 +1,7 @@
 package com.zhyun.account.controller;
 
 import com.zhyun.account.dto.CancelBalance;
+import com.zhyun.account.dto.QueryTransactionResponse;
 import com.zhyun.account.dto.TransactionDto;
 import com.zhyun.account.dto.UseBalance;
 import com.zhyun.account.exception.AccountException;
@@ -8,9 +9,7 @@ import com.zhyun.account.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 잔액 관련 컨트롤러
@@ -73,5 +72,13 @@ public class TransactionController {
         }
     }
 
+    @GetMapping("/transaction/{transactionId}")
+    public QueryTransactionResponse queryTransactionResponse(
+            @PathVariable String transactionId
+    ) {
+        return QueryTransactionResponse.from(
+                transactionService.queryTransaction(transactionId)
+        );
+    }
 
 }
