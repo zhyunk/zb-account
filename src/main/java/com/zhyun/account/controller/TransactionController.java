@@ -1,6 +1,5 @@
 package com.zhyun.account.controller;
 
-import com.zhyun.account.dto.CancelBalance;
 import com.zhyun.account.dto.TransactionDto;
 import com.zhyun.account.dto.UseBalance;
 import com.zhyun.account.exception.AccountException;
@@ -27,7 +26,7 @@ public class TransactionController {
 
     @PostMapping("/transaction/use")
     public UseBalance.Response useBalance (
-            @Valid @RequestBody UseBalance.Request request
+         @Valid @RequestBody UseBalance.Request request
     ) {
         try {
             return UseBalance.Response.from(
@@ -48,30 +47,4 @@ public class TransactionController {
             throw e;
         }
     }
-
-    @PostMapping("/transaction/cancel")
-    public CancelBalance.Response cancelBalance (
-            @Valid @RequestBody CancelBalance.Request request
-    ) {
-        try {
-            return CancelBalance.Response.from(
-                    transactionService.cancelBalance(
-                            request.getTransactionId(),
-                            request.getAccountNumber(),
-                            request.getAmount()
-                    )
-            );
-        } catch (AccountException e) {
-            log.error("Failed to use balance. ");
-
-            transactionService.saveFailedCancelTransaction(
-                    request.getAccountNumber(),
-                    request.getAmount()
-            );
-
-            throw e;
-        }
-    }
-
-
 }
