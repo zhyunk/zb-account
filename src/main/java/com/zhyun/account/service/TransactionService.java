@@ -111,7 +111,7 @@ public class TransactionService {
         if (!Objects.equals(transaction.getAmount(), amount)) {
             throw new AccountException(CANCEL_MUST_FULLY);
         }
-        if (!Objects.equals(transaction.getTransactedAt().isBefore(LocalDateTime.now().minusYears(1)), amount)) { 
+        if (transaction.getTransactedAt().isBefore(LocalDateTime.now().minusYears(1))) {
             // .isBefore() : 특정시간 이전인지 비교해주는 LocalDateTime 제공 메서드
             // LocalDateTime.now().minusYears(1) : 지금으로 부터 1년 전
             throw new AccountException(TOO_OLD_ORDER_TO_CANCEL);
