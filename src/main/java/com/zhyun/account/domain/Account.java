@@ -5,6 +5,7 @@ import com.zhyun.account.type.AccountStatus;
 import com.zhyun.account.type.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -18,13 +19,9 @@ import static com.zhyun.account.type.ErrorCode.INVALID_REQUEST;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Entity // 일종의 설정 파일 .
-@EntityListeners(AuditingEntityListener.class)
-public class Account {
-
-    @Id @GeneratedValue // pk 설정
-    private Long id;
+public class Account  extends BaseEntity {
 
     @ManyToOne
     private AccountUser accountUser;
@@ -36,9 +33,6 @@ public class Account {
 
     private LocalDateTime registeredAt;
     private LocalDateTime unRegisteredAt;
-
-    @CreatedDate      private LocalDateTime createdAt;
-    @LastModifiedDate private LocalDateTime updatedAt;
 
     public void useBalance(Long amount) {
         if (amount > balance)
