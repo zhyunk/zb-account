@@ -1,5 +1,6 @@
 package com.zhyun.account.dto;
 
+import com.zhyun.account.aop.AccountLockIdInterface;
 import com.zhyun.account.type.TransactionResultType;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -12,7 +13,7 @@ public class UseBalance {
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Request {
+    public static class Request implements AccountLockIdInterface {
         @NotNull
         @Min(1)
         private Long userId;
