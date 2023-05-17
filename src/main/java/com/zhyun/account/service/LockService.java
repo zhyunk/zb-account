@@ -21,11 +21,13 @@ public class LockService {
         log.debug("Trying lock for accountNumber : {}", accountNumber);
 
         try {
-            boolean isLock = lock.tryLock(1, 3, TimeUnit.SECONDS); // waitTime : lock 취득 소요 시간 , leaseTime : lock이 자동으로 해제되는 시간 ,
+            boolean isLock = lock.tryLock(1, 15, TimeUnit.SECONDS); // waitTime : lock 취득 소요 시간 , leaseTime : lock이 자동으로 해제되는 시간 ,
             if (!isLock) {
                 log.error("==================== Lock acquistion failed ==================");
                 throw new AccountException(ErrorCode.ACCOUNT_TRANSACTION_LOCK);
             }
+        } catch (AccountException e) {
+            throw e;
         } catch (Exception e) {
             log.error("Redis lock failed");
         }

@@ -21,7 +21,7 @@ public class LockAopAspect {
             AccountLockIdInterface request
     ) throws Throwable {    // pjp.proceed에서 예외가 발생할 수 있기 때문에 throws 설정
         // lock 취득 시도
-        lockService.lock(accountNumber);
+        lockService.lock(request.getAccountNumber());
         try {
             // before
             return pjp.proceed(); // aop를 걸어준 부분을 동작 시킴
@@ -29,7 +29,7 @@ public class LockAopAspect {
 
         } finally {
             // aop걸어준 부분이 정상/실패 구분없이 동작한 후 lock 해제
-            lockService.unlock(accountNumber);
+            lockService.unlock(request.getAccountNumber());
         }
     }
 

@@ -29,8 +29,9 @@ public class TransactionController {
     @AccountLock
     public UseBalance.Response useBalance (
             @Valid @RequestBody UseBalance.Request request
-    ) {
+    ) throws InterruptedException {
         try {
+            Thread.sleep(3000L); // AccountLock Annotation의 확인을 위한 Thread.sleep
             return UseBalance.Response.from(
                     transactionService.useBalance(
                             request.getUserId(),
