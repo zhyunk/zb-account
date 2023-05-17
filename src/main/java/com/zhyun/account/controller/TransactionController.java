@@ -1,5 +1,6 @@
 package com.zhyun.account.controller;
 
+import com.zhyun.account.aop.AccountLock;
 import com.zhyun.account.dto.CancelBalance;
 import com.zhyun.account.dto.QueryTransactionResponse;
 import com.zhyun.account.dto.TransactionDto;
@@ -25,6 +26,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping("/transaction/use")
+    @AccountLock
     public UseBalance.Response useBalance (
             @Valid @RequestBody UseBalance.Request request
     ) {
@@ -49,6 +51,7 @@ public class TransactionController {
     }
 
     @PostMapping("/transaction/cancel")
+    @AccountLock
     public CancelBalance.Response cancelBalance (
             @Valid @RequestBody CancelBalance.Request request
     ) {

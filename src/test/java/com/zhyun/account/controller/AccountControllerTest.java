@@ -9,7 +9,6 @@ import com.zhyun.account.dto.DeleteAccount;
 import com.zhyun.account.exception.AccountException;
 import com.zhyun.account.type.AccountStatus;
 import com.zhyun.account.service.AccountService;
-import com.zhyun.account.service.RedissonTestService;
 import com.zhyun.account.type.ErrorCode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,6 @@ class AccountControllerTest {
 
     @MockBean // test 할 AccountController가 의존하고 있는 Service 클래스들을 Mocking 해준다.
     private AccountService accountService;
-
-    @MockBean
-    private RedissonTestService redissonTestService;
 
     // 위에서 생성한 MockBean 들은 Injection 해주지 않아도 된다.
     // 왜냐하면 @WebMvcTest 기능에 Injection 해주는게 있음
