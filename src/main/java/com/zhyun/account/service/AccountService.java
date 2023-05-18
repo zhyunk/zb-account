@@ -36,9 +36,11 @@ public class AccountService {
 
         validateCreateAccount(accountUser);
 
+        // 계좌 번호 랜덤 숫자 10자리 난수 생성
+        long randomTenNumbers = getRandomTenNumbers();
         String newAccountNumber = accountRepository.findFirstByOrderByIdDesc()
-                .map(account -> String.valueOf((Integer.parseInt(account.getAccountNumber())) + 1))
-                .orElse("1000000000");
+                .map(account -> String.valueOf(randomTenNumbers))
+                .orElse(String.format("%010d", getRandomTenNumbers()));
 
 
         return AccountDto.fromEntity(
@@ -52,6 +54,20 @@ public class AccountService {
                                 .build()
                 )
         );
+    }
+
+    // 계좌 번호 중복 아닌 랜덤 숫자 10자리 난수 반환
+    private long getRandomTenNumbers() {
+        long accountNumber;
+        do {
+            accountNumber = (long) (Math.random() * 9_000_000_000L) + 1_000_000_000;
+        } while (!validateCheckAccountNumber(accountNumber));
+        return accountNumber;
+    }
+
+    // 계좌번호 중복 확인 여부 반환
+    private boolean validateCheckAccountNumber(long accountNumber) {
+        return accountRepository.findByAccountNumber(String.valueOf(accountNumber)).isEmpty();
     }
 
     private void validateCreateAccount(AccountUser accountUser) {

@@ -52,21 +52,23 @@ class AccountServiceTest {
         given(accountRepository.findFirstByOrderByIdDesc())
                 .willReturn(Optional.empty());
 
+        long newAccountNumber = (long) (Math.random() * 9_000_000_000L) + 1_000_000_000;
         given(accountRepository.save(any()))
                 .willReturn(Account.builder()
                         .accountUser(pobi)
-                        .accountNumber("1000000013")
+                        .accountNumber(String.valueOf(newAccountNumber))
                         .build());
 
         ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
 
         // when
         AccountDto accountDto = accountService.createAccount(1L, 1000L);
+        accountDto.setAccountNumber(String.valueOf(newAccountNumber)); // 계좌 번호 난수 생성으로, 테스트시 given에서 생성한 난수 입력해줌
 
         // then
         verify(accountRepository, times(1)).save(captor.capture());
         assertEquals(15L, accountDto.getUserId());
-        assertEquals("1000000000", captor.getValue().getAccountNumber());
+        assertEquals(String.valueOf(newAccountNumber), accountDto.getAccountNumber());
     }
 
     @Test
