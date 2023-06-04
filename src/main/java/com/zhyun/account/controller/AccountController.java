@@ -1,7 +1,6 @@
 package com.zhyun.account.controller;
 
 import com.zhyun.account.domain.Account;
-import com.zhyun.account.dto.AccountDto;
 import com.zhyun.account.dto.AccountInfo;
 import com.zhyun.account.dto.CreateAccount;
 import com.zhyun.account.dto.DeleteAccount;
@@ -15,10 +14,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/account")
 public class AccountController {
     private final AccountService accountService;
 
-    @PostMapping("/account")
+    @PostMapping()
     public CreateAccount.Response createAccount(
             @RequestBody @Valid CreateAccount.Request request
     ) {
@@ -30,7 +30,7 @@ public class AccountController {
         );
     }
 
-    @DeleteMapping("/account")
+    @DeleteMapping()
     public DeleteAccount.Response deleteAccount(
             @RequestBody @Valid DeleteAccount.Request request
     ) {
@@ -42,7 +42,7 @@ public class AccountController {
         );
     }
 
-    @GetMapping("/account")
+    @GetMapping()
     public List<AccountInfo> getAccountsByUserId(
             @RequestParam("user_id") Long userId
     ) {
@@ -57,7 +57,7 @@ public class AccountController {
 
     }
 
-    @GetMapping("/account/{id}")
+    @GetMapping("/{id}")
     public Account getAccount(@PathVariable Long id) {
         return accountService.getAccount(id);
     }

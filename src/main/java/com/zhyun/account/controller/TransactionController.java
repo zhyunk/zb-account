@@ -3,7 +3,6 @@ package com.zhyun.account.controller;
 import com.zhyun.account.aop.AccountLock;
 import com.zhyun.account.dto.CancelBalance;
 import com.zhyun.account.dto.QueryTransactionResponse;
-import com.zhyun.account.dto.TransactionDto;
 import com.zhyun.account.dto.UseBalance;
 import com.zhyun.account.exception.AccountException;
 import com.zhyun.account.service.TransactionService;
@@ -21,11 +20,12 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/transaction")
 public class TransactionController {
 
     private final TransactionService transactionService;
 
-    @PostMapping("/transaction/use")
+    @PostMapping("/use")
     @AccountLock
     public UseBalance.Response useBalance (
             @Valid @RequestBody UseBalance.Request request
@@ -51,7 +51,7 @@ public class TransactionController {
         }
     }
 
-    @PostMapping("/transaction/cancel")
+    @PostMapping("/cancel")
     @AccountLock
     public CancelBalance.Response cancelBalance (
             @Valid @RequestBody CancelBalance.Request request
@@ -76,7 +76,7 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("/transaction/{transactionId}")
+    @GetMapping("/{transactionId}")
     public QueryTransactionResponse queryTransactionResponse(
             @PathVariable String transactionId
     ) {
